@@ -26,5 +26,5 @@ $stmt->bind_param("ss", $ruc, $password);
 $stmt->execute();
 
 echo "Usuario creado correctamente.";
-echo "<br><a href='admin_dashboard.php'>Volver</a>";
+
 ?>
