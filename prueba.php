@@ -151,55 +151,6 @@ $_SESSION['user'] = true;    // Datos usuario
       height: 25px;
       object-fit: contain;
     }
-        .breadcrumb-item + .breadcrumb-item::before {
-      content: ">";
-    }
-
-    .table thead th {
-      background-color: #f1f1f1;
-      text-align: center;
-    }
-
-    .table td {
-      vertical-align: middle;
-      text-align: center;
-    }
-
-    .btn-subir {
-      background-color: #0c4f92;
-      color: white;
-    }
-
-    .btn-subir:hover {
-      background-color: #093c71;
-    }
-
-    .icon-btn {
-      border: none;
-      background: none;
-      cursor: pointer;
-      padding: 0.25rem;
-    }
-
-    .icon-btn i {
-      font-size: 1rem;
-    }
-      /* Quitar fondo y borde al botón con imagen */
-  .btn-subir.dropdown-toggle-split {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  /* Quitar la flecha del dropdown-toggle */
-  .btn-subir.dropdown-toggle-split::after {
-    display: none !important;
-  }
-
-  /* Opcional: cambiar el cursor para que parezca clickeable */
-  .btn-subir.dropdown-toggle-split {
-    cursor: pointer;
-  }
   </style>
 </head>
 <body class="bg-light">
@@ -254,121 +205,62 @@ $_SESSION['user'] = true;    // Datos usuario
 
     </div> <!-- FIN contenedor-menu -->
   </div>
-  <body class="bg-light">
 
-  <div class="sidebar">
-    <div class="titulo">ASESCON</div>
-    <hr class="linea-titulo" />
-
-    <div class="contenedor-menu" id="menuAccordion">
-
-      <!-- Administrativo -->
-      <a href="#" class="boton-menu">
-        <img src="archivos.png" class="icono-img" alt="Admin" />
-        Administrativo
-      </a>
-
-      <!-- Contabilidad -->
-      <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#contaCollapse" aria-expanded="true">
-        <span>
-          <img src="contilidad.png" class="icono-img" alt="Contabilidad" />
-          Contabilidad
-        </span>
-        <span class="icono-menu flecha-toggle">▲</span>
-      </button>
-      <div id="contaCollapse" class="collapse show submenu" data-bs-parent="#menuAccordion">
-        <a href="#" class="sub-opcion">Cuentas Contables</a>
-      </div>
-
-      <!-- Comprobantes contables -->
-      <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#comproCollapse" aria-expanded="false">
-        <span>Comprobantes contables</span>
-        <span class="icono-menu">▲</span>
-      </button>
-      <div id="comproCollapse" class="collapse submenu" data-bs-parent="#menuAccordion">
-        <a href="#" class="sub-opcion"></a>
-      </div>
-
-      <a href="logout.php" class="cerrar-sesion">
-        <img src="secion.png" class="icono-img" alt="Cerrar sesión" />
-        Cerrar sesión
-      </a>
-
-    </div>
-  </div>
-
-      <!-- CONTENIDO PRINCIPAL -->
-      <div class="main-content mt-9">
-        <div class="container-fluid p-4">
-          <!-- Encabezado alineado horizontalmente -->
-          <div class="d-flex justify-content-end align-items-center mb-3 flex-wrap gap-3">
-
-            <!-- Título ahora centrado horizontalmente con los elementos -->
-            <div class="fs-4 fw-bold me-auto">MINERA SANTA EMMA</div>
-
-            <!-- Contenedor de buscador y botones -->
-            <div class="d-flex align-items-center gap-3 flex-wrap">
-              <!-- Buscador moderno -->
-              <div class="position-relative " style="min-width: 310px;">
-                <input type="text" class="form-control ps-5 rounded-pill shadow-sm" placeholder="Buscar por N° de comprobante">
-                <img src="icone-loupe-gris.png" alt="Buscar" 
-                    class="position-absolute top-50 start-0 translate-middle-y ms-3" 
-                    style="width: 20px; height: 20px; object-fit: contain;">
-              </div>
-
-              <!-- Botones con icono y dropdown -->
-              <div class="btn-group">
-                <button class="btn btn-subir rounded-pill px-4">Subir</button>
-                <button type="button" class="btn btn-subir dropdown-toggle dropdown-toggle-split rounded-pill" data-bs-toggle="dropdown" aria-expanded="false" style="padding-left: 0.5rem; padding-right: 0.5rem;">
-                  <img src="opcciones.png" alt="Icono" style=" width: 20px; height: 20px; object-fit: contain;">
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Opción 1</a></li>
-                  <li><a class="dropdown-item" href="#">Opción 2</a></li>
-                </ul>
-              </div>
-
-              <button class="btn btn-light rounded-circle"><i class="bi bi-three-dots-vertical"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-        <!-- Tabla alineada a la derecha -->
-        <div class="table-responsive mt-12 mb-8 d-flex">
-          <table class="table table-bordered" style="width: 1150px; margin-left: 457px; margin-top: 100px;" >
-            <thead>
-              <tr>
-                <th><input type="checkbox"></th>
-                <th>Número</th>
-                <th>Fecha</th>
-                <th>Tipo</th>
-                <th>Descripción</th>
-                <th>Total</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>E001-204</td>
-                <td>25-05-2025</td>
-                <td>Venta</td>
-                <td>Factura de venta de productos a tienda XXX</td>
-                <td>S/ 105.50</td>
-                <td>
-                  <button class="icon-btn text-danger"><i class="bi bi-trash"></i></button>
-                  <button class="icon-btn text-primary"><i class="bi bi-pencil-square"></i></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="main-content">
+    <h1 class="text-center mb-4">Panel del Administrador</h1>
 
+    <!-- Subir PDF -->
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">📤 Subir Archivo para un Usuario</div>
+      <div class="card-body">
+        <form id="uploadForm" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">RUC del usuario</label>
+            <input type="text" name="ruc" class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Archivo</label>
+            <input type="file" name="archivo" class="form-control" required />
+          </div>
+          <button type="submit" class="btn btn-success">Subir</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Registrar usuario -->
+    <div class="card mb-4">
+      <div class="card-header bg-secondary text-white">👤 Registrar Nuevo Usuario</div>
+      <div class="card-body">
+        <form id="createUserForm">
+          <div class="mb-3">
+            <label class="form-label">RUC del nuevo usuario</label>
+            <input type="text" name="ruc" class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <input type="text" name="password" class="form-control" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Crear Usuario</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-container">
+    <div id="toastMessage" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastBody">Mensaje...</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Formulario subir archivo
     document.getElementById("uploadForm").addEventListener("submit", function (e) {
