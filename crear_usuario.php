@@ -244,7 +244,7 @@ body, html {
 .main-content {
   margin-left: 23%; /* Deja espacio para el sidebar fijo */
   width: 77%; /* Ocupa el espacio restante */
-  padding:  70px;
+  padding:  40px;
   box-sizing: border-box;
   min-height: 100vh;
   background-color: white;
@@ -253,7 +253,6 @@ body, html {
 
 .encabezado-nuevo-usuario {
   background-color: #ffffff; /* Fondo blanco */
-  padding:  20px;
   border-radius: 12px;
 }
 
@@ -267,7 +266,7 @@ body, html {
 
 .subtitulo-nuevo-usuario {
   text-align: center;
-  color: #888; /* Gris más claro */
+  color: black; /* Gris más claro */
   font-size: 15px;
   margin-bottom: 2rem;
   line-height: 1.5;
@@ -279,6 +278,8 @@ body, html {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   width: 100%;
+  max-width: 850px; /* Limita el ancho */
+  margin: 0 auto; /* Centra horizontalmente */
 }
 
 .form-card-header {
