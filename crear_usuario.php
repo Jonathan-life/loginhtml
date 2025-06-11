@@ -8,16 +8,7 @@ if (!isset($_SESSION["tipo"]) || $_SESSION["tipo"] != "admin") {
 }
 $_SESSION['admin'] = true;   // Datos admin
 $_SESSION['user'] = true;    // Datos usuario
-// Obtener usuarios y sus archivos
-$sql = "SELECT u.id, u.ruc, u.nombre, u.password, u.tipo, u.fecha_creacion,
-        GROUP_CONCAT(d.archivo_nombre SEPARATOR ', ') AS archivos
-        FROM usuarios u
-        LEFT JOIN documentos d ON u.id = d.user_id
-        GROUP BY u.id";
-$result = $conn->query($sql);
-// Suponiendo que ya tienes $conn definido
-$consulta_total = $conn->query("SELECT COUNT(*) AS total FROM usuarios");
-$total_usuarios = $consulta_total->fetch_assoc()['total'];
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -250,112 +241,115 @@ body, html {
     border: 1px solid #ced4da;
   }
 
-.custom-table {
-  border-collapse: separate;
-  border-spacing: 0 12px;
-  width: 920px;
-  text-align: center;
+.main-content {
+  margin-left: 23%; /* Deja espacio para el sidebar fijo */
+  width: 77%; /* Ocupa el espacio restante */
+  padding:  70px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  background-color: white;
 }
 
-.custom-table thead th {
-  background-color: #f0f0f0;
-  color: #6c757d;
-  border: none;
-  padding: 10px 14px;
-  font-size: 14px;
-}
 
-.custom-table tbody tr {
-  background-color: #ffffff;
+.encabezado-nuevo-usuario {
+  background-color: #ffffff; /* Fondo blanco */
+  padding:  20px;
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  height: 50px;
 }
 
-.custom-table td {
-  border: none;
-  padding: 10px 14px;
-  vertical-align: middle;
-  font-size: 14px;
-}
-
-.custom-table tbody tr td:first-child {
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-}
-
-.custom-table tbody tr td:last-child {
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-
-.btn-visualizar {
-  background-color: rgb(27, 69, 131);
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 20px;
-  font-size: 13px;
-  min-width: 120px;
+.titulo-nuevo-usuario {
   text-align: center;
+  font-weight: 700;
+  color: #555; /* Gris oscuro */
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
-.icon-btn {
-  background: none;
-  border: none;
+.subtitulo-nuevo-usuario {
+  text-align: center;
+  color: #888; /* Gris más claro */
+  font-size: 15px;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.form-card {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+}
+
+.form-card-header {
+  background-color: rgb(255, 255, 255); /* Azul oscuro como relleno */
+  padding: 15px 20px;
+  font-weight: 700;
+  font-size: 25px;
+  color: #555; /* Letra blanca */
+  border-bottom: none; /* Opcional: sin borde inferior */
+  border-radius: 12px 12px 0 0; /* Bordes redondeados arriba */
+}
+
+
+
+.form-card-body {
+  padding: 20px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border: 1px solid rgb(23, 58, 95); /* Borde azul */
+  border-radius: 12px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  color: #666; /* Texto gris */
+  background-color:rgb(255, 255, 255); /* Fondo claro */
+  transition: border-color 0.2s ease;
+}
+
+.form-input::placeholder {
+  color: #999; /* Placeholder gris claro */
+}
+
+.form-input:focus {
+  border-color: rgb(16, 58, 102); /* Azul más fuerte al enfocar */
+}
+
+.password-wrapper {
+  position: relative;
+
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
   cursor: pointer;
+  color: #666;
 }
 
-.btn-subir {
-  background-color: transparent;
+.submit-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
   border: none;
+  border-radius: 12px;
+  background-color:rgb(23, 58, 95);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-/* Quitar fondo azul en hover y active */
-.dropdown-menu .dropdown-item:hover,
-.dropdown-menu .dropdown-item:focus,
-.dropdown-menu .dropdown-item:active {
-  background-color: transparent !important;
-  color: #000 !important;
+.submit-btn:hover {
+  background-color: #0056b3;
 }
-
-/* Estilo del menú */
-.dropdown-menu {
-  min-width: 8rem;
-  padding: 0.25rem 0;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-}
-
-/* Quitar flecha del botón dropdown-toggle */
-.btn-subir.dropdown-toggle-split::after {
-  display: none !important;
-}
-
-/* Alineación del contenedor de acciones */
-.acciones-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-   /* Quitar fondo y borde al botón con imagen */
-  .btn-subir.dropdown-toggle-split {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  /* Quitar la flecha del dropdown-toggle */
-  .btn-subir.dropdown-toggle-split::after {
-    display: none !important;
-  }
-
-  /* Opcional: cambiar el cursor para que parezca clickeable */
-  .btn-subir.dropdown-toggle-split {
-    cursor: pointer;
-  }
 
   </style>
 </head>
@@ -378,7 +372,7 @@ body, html {
       <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#contaCollapse" aria-expanded="true">
         <span>
           <img src="contilidad.png" class="icono-img" alt="Contabilidad" />
-          Contabilidad
+          Contable
         </span>
         <span class="icono-menu flecha-toggle">▲</span>
       </button>
@@ -395,89 +389,82 @@ body, html {
     </div> <!-- FIN contenedor-menu -->
   </div>
 
-  <!-- Contenido principal -->
-  <div class="main-content">
 
-    <!-- Encabezado -->
-      <div class="d-flex justify-content-between align-items-start mb-4">
-        <div>
-          <h2 class="fw-bold">USUARIOS</h2>
-          <p><?= $total_usuarios ?> usuarios registrados</p>
-        </div>
-        <div>
-          <a href="crear_usuario.php" class="btn btn-primary-custom text-decoration-none">
-            <i class="bi bi-plus-lg"></i> + Crear nuevo usuario
-          </a>
-        </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="main-content">
+<div class="encabezado-nuevo-usuario">
+  <h2 class="titulo-nuevo-usuario">CREA UN NUEVO USUARIO</h2>
+  <p class="subtitulo-nuevo-usuario">
+    Completa los siguientes datos para registrar un<br>
+    nuevo usuario en el sistema.
+  </p>
+</div>
+
+
+
+    <div class="form-card">
+      <div class="form-card-header">Información del usuario</div>
+      <div class="form-card-body">
+        <form action="guardar_usuario.php" method="POST" id="createUserForm">
+          <input type="text" name="NOMBRE" class="form-input" placeholder="NOMBRE" required>
+          <input type="text" name="RUC" class="form-input" placeholder="RUC" required>
+
+          <div class="password-wrapper">
+            <input type="password" name="password" class="form-input" placeholder="CONTRASEÑA" id="password" required>
+            <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password', this)"></i>
+          </div>
+
+          <div class="password-wrapper">
+            <input type="password" name="confirm_password" class="form-input" placeholder="CONFIRMAR CONTRASEÑA" id="confirm_password" required>
+            <i class="bi bi-eye toggle-password" onclick="togglePassword('confirm_password', this)"></i>
+          </div>
+
+          <button type="submit" class="submit-btn">Registrar Usuario</button>
+        </form>
+      </div>
     </div>
+  </div>
 
-<!-- Barra de búsqueda -->
-<div class="input-group mb-2">
-  <span class="input-group-text bg-white border-end-0">
-    <img src="icone-loupe-gris.png" alt="Buscar" style="width: 16px; height: 16px;">
-  </span>
-  <input type="text" id="buscador-ruc" class="form-control border-start-0" placeholder="Buscar por N° de RUC">
-</div>
+<!-- Bootstrap Icons (para el ojito de contraseña) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<!-- Tabla de usuarios -->
-<div class="table-responsive mt-4 mb-3">
-  <table class="table custom-table">
-    <thead>
-      <tr>
-        <th>RUC</th>
-        <th>Nombre</th>
-        <th>Estado</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody id="tabla-usuarios">
-      <?php while ($row = $result->fetch_assoc()): ?>
-        <tr>
-          <td class="ruc-cell"><?= htmlspecialchars($row['ruc'] ?? '') ?></td>
-          <td><?= htmlspecialchars($row['nombre'] ?? '') ?></td>
-          <td><?= htmlspecialchars($row['estado'] ?? '') ?></td>
-          <td>
-            <div class="acciones-box d-flex justify-content-end gap-2">
-              <!-- Visualizar archivos -->
-              <form action="visualizar_archivos.php" method="GET" target="_blank">
-                <input type="hidden" name="user_id" value="<?= $row['id'] ?>">
-                <button type="submit" class="btn-visualizar">Visualizar</button>
-              </form>
-
-              <!-- Eliminar usuario -->
-              <form action="eliminar_usuario.php" method="POST" onsubmit="return confirm('¿Eliminar usuario y sus archivos?')">
-                <input type="hidden" name="user_id" value="<?= $row['id'] ?>">
-                <button type="submit" class="icon-btn text-danger">
-                  <img src="basura.png" alt="Eliminar" style="width: 16px; height: 16px;">
-                </button>
-              </form>
-
-              <!-- Menú desplegable -->
-              <div class="dropdown">
-                <button type="button" class="btn btn-subir dropdown-toggle dropdown-toggle-split rounded-pill"
-                        data-bs-toggle="dropdown" aria-expanded="false"
-                        style="padding-left: 0.5rem; padding-right: 0.5rem;">
-                  <img src="opcciones.png" alt="Icono" style="width: 18px; height: 18px;">
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="editar_usuario.php?id=<?= $row['id'] ?>">Editar nombre</a></li>
-                  <li><a class="dropdown-item" href="editar_password.php?id=<?= $row['id'] ?>">Cambiar contraseña</a></li>
-                </ul>
-              </div>
-            </div>
-          </td>
-        </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
-</div>
-
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+<!-- Script para mostrar/ocultar contraseña -->
+<script>
+  function togglePassword(id, el) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+      input.type = "text";
+      el.innerHTML = '<i class="bi bi-eye"></i>';
+    } else {
+      input.type = "password";
+      el.innerHTML = '<i class="bi bi-eye-slash"></i>';
+    }
+  }
+</script>
 
   <script>
+    // Formulario subir archivo
+    document.getElementById("uploadForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!confirm("¿Estás seguro de subir este archivo?")) return;
+
+      const form = this;
+      const formData = new FormData(form);
+
+      fetch("upload.php", {
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => res.text())
+        .then((msg) => {
+          showToast(msg, msg.includes("exitosamente") ? "success" : "danger");
+          if (msg.includes("exitosamente")) {
+            form.reset();
+          }
+        });
+    });
 
     // Formulario crear usuario
     document.getElementById("createUserForm").addEventListener("submit", function (e) {
@@ -538,16 +525,3 @@ body, html {
   
 </body>
 </html>
-
-<!-- Script para búsqueda -->
-<script>
-  document.getElementById("buscador-ruc").addEventListener("input", function() {
-    const filtro = this.value.toLowerCase().trim();
-    const filas = document.querySelectorAll("#tabla-usuarios tr");
-
-    filas.forEach(fila => {
-      const ruc = fila.querySelector(".ruc-cell")?.textContent.toLowerCase() || "";
-      fila.style.display = ruc.includes(filtro) ? "" : "none";
-    });
-  });
-</script>

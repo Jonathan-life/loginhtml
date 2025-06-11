@@ -178,7 +178,7 @@ $_SESSION['user'] = true;    // Datos usuario
       </button>
       <div id="contaCollapse" class="collapse show submenu" data-bs-parent="#menuAccordion">
         <!-- Subopciones de contabilidad -->
-        <a href="#" class="sub-opcion">
+        <a href="ver_archivos.php" class="sub-opcion">
           <class="icono-img" alt="Cuentas" />
           Cuentas Contables
         </a>
