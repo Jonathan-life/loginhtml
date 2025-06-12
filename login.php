@@ -9,26 +9,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
 
     // Verificar usuario
-    $sql = "SELECT * FROM usuarios WHERE ruc='$ruc' AND password='$password'";
-    $result = $conn->query($sql);
-    if ($result->num_rows == 1) {
-        $_SESSION["ruc"] = $ruc;
-        $_SESSION["tipo"] = "usuario";
-        header("Location: user_dashboard.php");
-        exit;
-    }
+    $sql = "SELECT * FROM usuarios WHERE ruc = ? AND password = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $ruc, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $usuario = $result->fetch_assoc();
 
-    // Verificar admin
-    $sql2 = "SELECT * FROM administradores WHERE usuario='$ruc' AND password='$password'";
-    $result2 = $conn->query($sql2);
-    if ($result2->num_rows == 1) {
-        $_SESSION["usuario"] = $ruc;
-        $_SESSION["tipo"] = "admin";
-        header("Location: admin_dashboard.php");
-        exit;
-    }
+    if ($usuario) {
+        if ($usuario['estado'] === 'inactivo') {
+            $error = "Esta cuenta está desactivada. Contacte al administrador.";
+        } else {
+            $_SESSION["ruc"] = $usuario['ruc'];
+            $_SESSION["tipo"] = "usuario";
+            $_SESSION["usuario_id"] = $usuario['id'];
+            header("Location: user_dashboard.php");
+            exit;
+        }
+    } else {
+        // Verificar admin si no es usuario
+        $sql2 = "SELECT * FROM administradores WHERE usuario = ? AND password = ?";
+        $stmt2 = $conn->prepare($sql2);
+        $stmt2->bind_param("ss", $ruc, $password);
+        $stmt2->execute();
+        $result2 = $stmt2->get_result();
+        $admin = $result2->fetch_assoc();
 
-    $error = "Credenciales incorrectas.";
+        if ($admin) {
+            $_SESSION["usuario"] = $admin['usuario'];
+            $_SESSION["tipo"] = "admin";
+            header("Location: admin_dashboard.php");
+            exit;
+        } else {
+            $error = "Credenciales incorrectas.";
+        }
+    }
 }
 ?>
 
@@ -71,54 +86,65 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       color:rgb(12, 67, 126);
       margin-bottom: 0.25rem;
       text-align: left;
-      font-size: 3rem;
+      font-size: 2rem;
     }
 
     .login-subtitle {
       color: #333;
       margin-bottom: 2rem;
       text-align: left;
-      font-size: 1.4rem;
+      font-size: 1rem;
     }
 
     .form-group {
       position: relative;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .form-control {
+      width: 100%;
+      border-radius: 12px;
+      padding: 16px 14px 16px 14px;
+      font-size: 1rem;
+      border: 2px solid #0056b3;
+      background: transparent;
     }
 
     .form-label {
       position: absolute;
-      top: 9px;
       left: 16px;
+      top: 19px;
       background: white;
       padding: 0 6px;
-      font-size: 0.95rem;
       color: #0056b3;
       font-weight: 600;
-      border-radius: 4px;
-      z-index: 1;
+      transition: 0.2s ease all;
+      pointer-events: none;
     }
 
-.form-control {
-  border-radius: 12px;
-  padding: 14px 42px 14px 14px; /* espacio a la derecha para la imagen */
-  font-size: 1.1rem;
-  border: 2px solid #0056b3;
-}
+    /* Cuando el input está enfocado o tiene texto, la etiqueta sube */
+    .form-control:focus + .form-label,
+    .form-control:not(:placeholder-shown) + .form-label {
+      top: -10px;
+      left: 12px;
+      font-size: 0.85rem;
+      background-color: white;
+      color: #003d80;
+    }
 
-.input-icon {
-  position: absolute;
-  right: 12px; /* ahora el icono está a la derecha */
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-}
+    .input-icon {
+      position: absolute;
+      right: 16px;
+      top: 52%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 23px;
+    }
 
-.input-icon img {
-  width: 110%;
-  height: 65%;
-}
+    .input-icon img {
+      width: 100%;
+      height: auto;
+    }
 
     .btn-primary {
       background-color:rgb(19, 67, 119);
@@ -156,16 +182,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form method="POST" novalidate>
       <div class="form-group">
-        <label for="ruc" class="form-label">RUC:</label>
-        <input type="text" class="form-control" id="ruc" name="ruc" required>
+        <input type="text" class="form-control" id="ruc" name="ruc" required placeholder=" ">
+        <label for="ruc" class="form-label">RUC</label>
       </div>
 
       <div class="form-group">
+        <input type="password" class="form-control" id="password" name="password" required placeholder=" ">
         <label for="password" class="form-label">Contraseña</label>
         <div class="input-icon">
           <img src="contraseña-ojo.png" alt="Icono de contraseña">
         </div>
-        <input type="password" class="form-control" id="password" name="password" required>
       </div>
       
       <div class="form-check mb-3">

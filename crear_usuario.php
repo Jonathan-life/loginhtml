@@ -409,8 +409,9 @@ body, html {
       <div class="form-card-header">Información del usuario</div>
       <div class="form-card-body">
         <form action="guardar_usuario.php" method="POST" id="createUserForm">
-          <input type="text" name="NOMBRE" class="form-input" placeholder="NOMBRE" required>
-          <input type="text" name="RUC" class="form-input" placeholder="RUC" required>
+          <input type="text" name="nombre" class="form-input" placeholder="NOMBRE" required>
+          <input type="text" name="ruc" class="form-input" placeholder="RUC" required>
+
 
           <div class="password-wrapper">
             <input type="password" name="password" class="form-input" placeholder="CONTRASEÑA" id="password" required>
@@ -431,64 +432,40 @@ body, html {
 <!-- Bootstrap Icons (para el ojito de contraseña) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<!-- Script para mostrar/ocultar contraseña -->
-<script>
-  function togglePassword(id, el) {
-    const input = document.getElementById(id);
-    if (input.type === "password") {
-      input.type = "text";
-      el.innerHTML = '<i class="bi bi-eye"></i>';
-    } else {
-      input.type = "password";
-      el.innerHTML = '<i class="bi bi-eye-slash"></i>';
-    }
-  }
-</script>
 
+
+  <!-- TOAST -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastMessage" class="toast text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div id="toastBody" class="toast-body">Mensaje</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOTSTRAP Y JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- SCRIPT FUNCIONAL -->
   <script>
-    // Formulario subir archivo
-    document.getElementById("uploadForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!confirm("¿Estás seguro de subir este archivo?")) return;
+    // Mostrar/Ocultar contraseña
+    function togglePassword(id, el) {
+      const input = document.getElementById(id);
+      const icon = el;
 
-      const form = this;
-      const formData = new FormData(form);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+      } else {
+        input.type = "password";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+      }
+    }
 
-      fetch("upload.php", {
-        method: "POST",
-        body: formData,
-      })
-        .then((res) => res.text())
-        .then((msg) => {
-          showToast(msg, msg.includes("exitosamente") ? "success" : "danger");
-          if (msg.includes("exitosamente")) {
-            form.reset();
-          }
-        });
-    });
-
-    // Formulario crear usuario
-    document.getElementById("createUserForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!confirm("¿Deseas crear este usuario?")) return;
-
-      const form = this;
-      const formData = new FormData(form);
-
-      fetch("registrar_usuario.php", {
-        method: "POST",
-        body: formData,
-      })
-        .then((res) => res.text())
-        .then((msg) => {
-          showToast(msg, msg.includes("creado") ? "success" : "danger");
-          if (msg.includes("creado")) {
-            form.reset();
-          }
-        });
-    });
-
-    // Función mostrar toast
+    // Mostrar mensaje tipo toast
     function showToast(message, type = "success") {
       const toastEl = document.getElementById("toastMessage");
       const toastBody = document.getElementById("toastBody");
@@ -498,31 +475,42 @@ body, html {
       toast.show();
     }
 
-    // Toggle menú lateral
-    document.querySelectorAll('.btn-toggle').forEach(button => {
-      button.addEventListener('click', () => {
-        const targetId = button.getAttribute('data-target');
-        const target = document.querySelector(targetId);
-        const isVisible = target.classList.contains('show');
+    // Carga de scripts al DOM
+    document.addEventListener("DOMContentLoaded", () => {
+      // Formulario CREAR USUARIO
+      const form = document.getElementById("createUserForm");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-        // Cerrar todos los submenús
-        document.querySelectorAll('.submenu').forEach(menu => {
-          menu.classList.remove('show');
-        });
+        if (!confirm("¿Deseas crear este usuario?")) return;
 
-        // Resetear todos los íconos a flecha abajo
-        document.querySelectorAll('.btn-toggle .icono-menu').forEach(icon => {
-          icon.textContent = '▼';
-        });
+        const password = form.querySelector('input[name="password"]').value;
+        const confirmPassword = form.querySelector('input[name="confirm_password"]').value;
 
-        if (!isVisible) {
-          target.classList.add('show');
-          const icon = button.querySelector('.icono-menu');
-          icon.textContent = '▲';
+        if (password !== confirmPassword) {
+          showToast("Las contraseñas no coinciden", "danger");
+          return;
         }
+
+        const formData = new FormData(form);
+
+        fetch("registrar_usuario.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then((res) => res.text())
+          .then((msg) => {
+            showToast(msg, msg.includes("creado") ? "success" : "danger");
+            if (msg.includes("creado")) {
+              form.reset();
+            }
+          })
+          .catch((err) => {
+            showToast("Error al enviar el formulario", "danger");
+            console.error(err);
+          });
       });
     });
   </script>
-  
 </body>
 </html>
