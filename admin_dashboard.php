@@ -39,6 +39,19 @@ if (isset($_SESSION['mensaje'])) {
 
     unset($_SESSION['mensaje']); // Limpiar sesión
 }
+// Paginación
+$registrosPorPagina = 10;
+$paginaActual = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
+$offset = ($paginaActual - 1) * $registrosPorPagina;
+
+// Total de usuarios
+$resultTotal = $conn->query("SELECT COUNT(*) AS total FROM usuarios");
+$totalUsuarios = $resultTotal->fetch_assoc()['total'];
+$totalPaginas = ceil($totalUsuarios / $registrosPorPagina);
+
+// Consulta paginada
+$sql = "SELECT * FROM usuarios LIMIT $offset, $registrosPorPagina";
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -51,8 +64,6 @@ if (isset($_SESSION['mensaje'])) {
 
  /* Reseteo general */
 body, html {
-  margin: 0;
-  padding: 0;
   height: 100%;
   background-color: #f8f9fa; /* ejemplo para bg claro */
 }
@@ -77,7 +88,7 @@ body, html {
 /* Contenido principal a la derecha del sidebar */
 .main-content {
   margin-left: 23%;    /* deja espacio para sidebar fijo */
-  padding-top: 100px;   /* baja solo el contenido interno */
+  padding-top: 60px;   /* baja solo el contenido interno */
   padding-left: 50px;
   padding-right: 70px;
   background-color: white;
@@ -93,11 +104,10 @@ body, html {
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
-  margin-top: 30px; /* <-- aquí bajas el botón */
+  margin-top: 22px; /* <-- aquí bajas el botón */
 }
 .btn-primary-custom:hover {
   background-color: rgb(27, 49, 71);
@@ -120,7 +130,7 @@ body, html {
 .titulo {
   width: 100%;
   text-align: center;
-  margin-top: 40px;
+  margin-top: 20px;
   letter-spacing: 4px;
   font-size: 1.8rem;
   font-weight: bold;
@@ -401,18 +411,14 @@ body, html {
         <img src="archivos.png" class="icono-img" alt="Admin" />
         Administrativo
       </a>
-
-      <!-- Contabilidad -->
-      <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#contaCollapse" aria-expanded="true">
+      <!-- Solo redirecciona a upload_file.php -->
+      <a href="user_upload.php" class="btn-toggle d-inline-block">
         <span>
           <img src="contilidad.png" class="icono-img" alt="Contabilidad" />
-          Contabilidad
+          Subir archivos
         </span>
-        <span class="icono-menu flecha-toggle">▲</span>
-      </button>
-      <div id="contaCollapse" class="collapse show submenu" data-bs-parent="#menuAccordion">
-        <a href="#" class="sub-opcion">Cuentas Contables</a>
-      </div>
+      </a>
+
 
       <!-- Cerrar sesión -->
       <a href="logout.php" class="cerrar-sesion">
@@ -448,7 +454,7 @@ body, html {
 </div>
 
 <!-- Tabla de usuarios -->
-<div class="table-responsive mt-4 mb-3 d-flex justify-content-center">
+<div class="table-responsive mt-2 mb-3 d-flex justify-content-center">
   <table class="table custom-table">
     <thead>
       <tr>
@@ -465,9 +471,9 @@ body, html {
           <td><?= htmlspecialchars($row['nombre'] ?? '') ?></td>
           <td>
             <img src="<?= $row['estado'] == 'activo' ? 'chaeck.png' : 'inactvo.png' ?>" 
-                alt="<?= $row['estado'] ?>" 
-                title="<?= ucfirst($row['estado']) ?>" 
-                style="width: 20px; height: 20px; margin-right: 6px;">
+                 alt="<?= $row['estado'] ?>" 
+                 title="<?= ucfirst($row['estado']) ?>" 
+                 style="width: 20px; height: 20px; margin-right: 6px;">
             <?= ucfirst($row['estado']) ?>
           </td>
           <td>
@@ -505,11 +511,11 @@ body, html {
                   </li>
                   <li>
                     <a class="dropdown-item d-flex align-items-center <?= $row['estado'] == 'activo' ? 'text-danger' : 'text-success' ?>"
-                      href="#"
-                      onclick="toggleEstadoUsuario(<?= $row['id'] ?>, '<?= $row['estado'] ?>')">
+                       href="#"
+                       onclick="toggleEstadoUsuario(<?= $row['id'] ?>, '<?= $row['estado'] ?>')">
                       <img src="<?= $row['estado'] == 'activo' ? 'inactvo.png' : 'chaeck.png' ?>" 
-                          alt="<?= $row['estado'] == 'activo' ? 'Desactivar' : 'Activar' ?>" 
-                          style="width: 16px; height: 16px; margin-right: 8px;">
+                           alt="<?= $row['estado'] == 'activo' ? 'Desactivar' : 'Activar' ?>" 
+                           style="width: 16px; height: 16px; margin-right: 8px;">
                       <span><?= $row['estado'] == 'activo' ? 'Desactivar cuenta ' : 'Activar cuenta ' ?></span>
                     </a>
                   </li>
@@ -523,6 +529,34 @@ body, html {
   </table>
 </div>
 
+<!-- Paginación y total -->
+<div class="d-flex justify-content-between align-items-center mt-3 px-3">
+  <div>
+    <p class="mb-0">Total artículos: <?= $totalUsuarios ?></p>
+  </div>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination mb-0">
+      <li class="page-item <?= $paginaActual <= 1 ? 'disabled' : '' ?>">
+        <a class="page-link" href="?pagina=<?= $paginaActual - 1 ?>" aria-label="Anterior">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+
+      <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+        <li class="page-item <?= $paginaActual == $i ? 'active' : '' ?>">
+          <a class="page-link" href="?pagina=<?= $i ?>"><?= $i ?></a>
+        </li>
+      <?php endfor; ?>
+
+      <li class="page-item <?= $paginaActual >= $totalPaginas ? 'disabled' : '' ?>">
+        <a class="page-link" href="?pagina=<?= $paginaActual + 1 ?>" aria-label="Siguiente">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
 
 
 

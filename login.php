@@ -23,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["ruc"] = $usuario['ruc'];
             $_SESSION["tipo"] = "usuario";
             $_SESSION["usuario_id"] = $usuario['id'];
+            $_SESSION["nombre"] = $usuario['nombre']; // ✅ Aquí guardamos el nombre
             header("Location: user_dashboard.php");
             exit;
         }
@@ -46,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

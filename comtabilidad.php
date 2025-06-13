@@ -342,32 +342,36 @@ $_SESSION['user'] = true;    // Datos usuario
       </div>
 
 
-        <!-- Tabla alineada a la derecha -->
-        <div class="table-responsive mt-12 mb-8 d-flex">
-          <table class="table table-bordered" style="width: 1150px; margin-left: 457px; margin-top: 100px;" >
-            <thead>
-              <tr>
-                <th><input type="checkbox"></th>
-                <th>Número</th>
-                <th>Fecha</th>
-                <th>Descripción</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>E001-204</td>
-                <td>25-05-2025</td>
-                <td>Factura de venta de productos a tienda XXX</td>
-                <td>
-                  <button class="icon-btn text-danger"><i class="bi bi-trash"></i></button>
-                  <button class="icon-btn text-primary"><i class="bi bi-pencil-square"></i></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <!-- Tabla alineada a la derecha con checkboxes -->
+<div class="table-responsive mt-12 mb-8 d-flex">
+  <table class="table table-bordered table-striped" id="tablaUsuarios"
+         style="width: 1150px; margin-left: 457px; margin-top: 100px;">
+    <thead class="table-primary text-center">
+      <tr>
+        <th><input type="checkbox" id="checkTodos"></th>
+        <th>RUC</th>
+        <th>Nombre</th>
+        <th>Usuario</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($usuarios as $usuario): ?>
+        <tr>
+          <td><input type="checkbox" class="checkFila"></td>
+          <td><?= htmlspecialchars($usuario['ruc']) ?></td>
+          <td><?= htmlspecialchars($usuario['nombre']) ?></td>
+          <td><?= htmlspecialchars($usuario['tipo']) ?></td>
+          <td>
+            <a href="upload_file.php?ruc=<?= urlencode($usuario['ruc']) ?>" class="btn btn-sm btn-primary">
+              Seleccionar
+            </a>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+</div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -449,7 +453,15 @@ $_SESSION['user'] = true;    // Datos usuario
         }
       });
     });
+    
   </script>
-  
+  <script>
+  // Checkbox "seleccionar todos"
+  document.getElementById('checkTodos').addEventListener('change', function () {
+    const checkboxes = document.querySelectorAll('.checkFila');
+    checkboxes.forEach(cb => cb.checked = this.checked);
+  });
+</script>
+
 </body>
 </html>

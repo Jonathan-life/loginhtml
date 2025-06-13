@@ -20,8 +20,6 @@ $_SESSION['user'] = true;    // Datos usuario
 
  /* Reseteo general */
 body, html {
-  margin: 0;
-  padding: 0;
   height: 100%;
   background-color: #f8f9fa; /* ejemplo para bg claro */
 }
@@ -46,7 +44,7 @@ body, html {
 /* Contenido principal a la derecha del sidebar */
 .main-content {
   margin-left: 23%;    /* deja espacio para sidebar fijo */
-  padding-top: 100px;   /* baja solo el contenido interno */
+  padding-top: 60px;   /* baja solo el contenido interno */
   padding-left: 50px;
   padding-right: 70px;
   background-color: white;
@@ -62,11 +60,10 @@ body, html {
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
-  margin-top: 30px; /* <-- aquí bajas el botón */
+  margin-top: 22px; /* <-- aquí bajas el botón */
 }
 .btn-primary-custom:hover {
   background-color: rgb(27, 49, 71);
@@ -89,7 +86,7 @@ body, html {
 .titulo {
   width: 100%;
   text-align: center;
-  margin-top: 40px;
+  margin-top: 20px;
   letter-spacing: 4px;
   font-size: 1.8rem;
   font-weight: bold;
@@ -370,16 +367,13 @@ body, html {
       </a>
 
       <!-- Contabilidad -->
-      <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#contaCollapse" aria-expanded="true">
+      <a href="upload_file.php" class="btn-toggle d-inline-block">
         <span>
           <img src="contilidad.png" class="icono-img" alt="Contabilidad" />
-          Contable
+          Subir archivos
         </span>
-        <span class="icono-menu flecha-toggle">▲</span>
-      </button>
-      <div id="contaCollapse" class="collapse show submenu" data-bs-parent="#menuAccordion">
-        <a href="#" class="sub-opcion">Cuentas Contables</a>
-      </div>
+      </a>
+
 
       <!-- Cerrar sesión -->
       <a href="logout.php" class="cerrar-sesion">
